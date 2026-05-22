@@ -1,0 +1,5 @@
+- Authentication approach | Read it if you need to know about the authentication flow | `harness/techguide/auth.md`
+- Frontend stack | Read it if you need to know about the frontend stack | `harness/techguide/frontend-stack.md`
+- Backend stack | Read it if you need to know about the backend stack | `harness/techguide/backend-stack.md`
+- Frontend guidelines | Read it every time that you have to handle a request related with the frontend part  | `harness/techguide/frontend-guidelines.md`
+- Backend guidelines | Read it every time that you have to handle a request related with the backend part | `harness/techguide/backend-guidelines.md`
