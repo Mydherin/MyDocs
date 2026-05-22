@@ -5,12 +5,12 @@ import { useGoogleAccessToken } from '../infrastructure/google/useGoogleAccessTo
 export function useSignIn() {
   const { setUser, setLoading, setError } = useAuthStore();
 
-  return useGoogleAccessToken(async (accessToken) => {
+  return useGoogleAccessToken(async ({ accessToken, expiresIn }) => {
     setLoading(true);
     setError(null);
     try {
       const { user } = await signInWithBackend(accessToken);
-      setUser(user, accessToken);
+      setUser(user, accessToken, expiresIn);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'unknown_error');
     }

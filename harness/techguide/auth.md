@@ -46,11 +46,17 @@ The `POST /auth/signin` endpoint must be fully excluded from the auth middleware
 
 ## Frontend Responsibilities
 1. Initiate Google login with explicit scopes: `openid email profile`.
-2. On success, receive the Google **access token** from the OAuth2 response.
+2. On success, receive the Google **access token** and its **expiry time** (`expires_in`, in seconds) from the OAuth2 response.
 3. Call `POST /auth/signin` with `Authorization: Bearer <access_token>`. Store the returned user record in client-side state.
 4. Attach the token to every subsequent API request: `Authorization: Bearer <access_token>`.
-5. Store the token in memory only (never persist to localStorage or cookies). The token is ephemeral.
-6. Token refresh is the frontend's responsibility. The backend does not handle refresh logic.
+5. Persist the access token, its absolute expiry timestamp (`expiresAt = Date.now() + expires_in * 1000`), and the user record to `localStorage` so the session survives page reloads.
+6. On app init, rehydrate auth state from `localStorage` if a non-expired token exists.
+7. Token refresh is the frontend's responsibility. The backend does not handle refresh logic. Use **silent re-authentication** (no refresh token required):
+   - Before each API call, check if the token is expired or about to expire (within a 60-second buffer).
+   - If so, call Google's token client with `prompt: ''` (empty string — triggers silent flow with no UI). This silently issues a new access token if the user still has an active Google session.
+   - On success: update `localStorage` and in-memory state with the new token and expiry.
+   - On failure (user signed out of Google): clear auth state and redirect to `/login`.
+8. On explicit logout: clear `localStorage` auth keys and in-memory state.
 
 ---
 
