@@ -21,7 +21,8 @@ public class GoogleAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals("/auth/signin");
+        return request.getServletPath().equals("/auth/signin")
+                || request.getMethod().equalsIgnoreCase("OPTIONS");
     }
 
     @Override

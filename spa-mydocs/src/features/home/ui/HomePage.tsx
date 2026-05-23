@@ -1,5 +1,7 @@
 import { FileText, Clock, Star, Plus, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '../../auth/store/authStore';
+import { useWorkspaceStore } from '../../workspaces/store/workspaceStore';
+import { useGetWorkspaces } from '../../workspaces/application/useGetWorkspaces';
 import { Navbar } from '../../../shared/ui/layout/Navbar';
 
 const stats = [
@@ -10,10 +12,10 @@ const stats = [
 
 const quickActions = [
   { label: 'New Document', description: 'Start writing from a blank page', icon: FileText },
-  { label: 'Browse Templates', description: 'Kickstart with a ready-made layout', icon: Layout },
+  { label: 'Browse Templates', description: 'Kickstart with a ready-made layout', icon: LayoutIcon },
 ];
 
-function Layout({ className }: { className?: string }) {
+function LayoutIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}
          strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -25,6 +27,11 @@ function Layout({ className }: { className?: string }) {
 
 export function HomePage() {
   const user = useAuthStore((s) => s.user)!;
+  const { workspaces, activeWorkspaceId } = useWorkspaceStore();
+
+  useGetWorkspaces();
+
+  const activeWorkspace = workspaces.find((w) => w.id === activeWorkspaceId);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -42,9 +49,21 @@ export function HomePage() {
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Welcome back, <span className="text-indigo-600">{user.nickname}</span>
             </h1>
-            <p className="mt-1.5 text-slate-500 text-sm sm:text-base">
-              Here's an overview of your workspace.
-            </p>
+
+            {/* Active workspace — read-only context */}
+            {activeWorkspace && (
+              <div className="flex items-center gap-1.5 mt-2">
+                <div className="w-4 h-4 rounded bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                  <span className="text-[9px] font-bold text-indigo-600">
+                    {activeWorkspace.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-xs text-slate-500 font-medium">{activeWorkspace.name}</span>
+                {activeWorkspace.role === 'MEMBER' && (
+                  <span className="text-[10px] text-slate-400">· shared</span>
+                )}
+              </div>
+            )}
           </div>
           <button className="self-start sm:self-auto flex items-center gap-2 px-4 py-2.5 bg-indigo-600
                              hover:bg-indigo-700 text-white text-sm font-medium rounded-xl

@@ -5,6 +5,7 @@ import dev.skypea.mic_mydocs.auth.domain.port.out.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -21,6 +22,11 @@ public class UserPersistenceAdapter implements UserRepository {
     @Override
     public User save(User user) {
         return toDomain(jpaRepository.save(toEntity(user)));
+    }
+
+    @Override
+    public List<User> findAllByIds(List<String> ids) {
+        return jpaRepository.findAllById(ids).stream().map(this::toDomain).toList();
     }
 
     private User toDomain(UserJpaEntity e) {

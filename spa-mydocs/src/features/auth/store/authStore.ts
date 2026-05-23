@@ -61,5 +61,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   signOut: () => {
     clearStorage();
     set({ user: null, accessToken: null, expiresAt: null });
+    import('../../workspaces/store/workspaceStore').then(({ useWorkspaceStore }) => {
+      useWorkspaceStore.getState().clear();
+    });
   },
 }));

@@ -1,6 +1,7 @@
 # References
 
 - Authentication approach | Read it if you need to know about the authentication flow | `harness/techguide/auth.md`
+- Workspaces | Read it to understand the workspaces system: isolation model, ownership rules, sharing, and deletion behavior | `harness/techguide/workspaces.md`
 - Frontend stack | Read it if you need to know about the frontend stack | `harness/techguide/frontend-stack.md`
 - Backend stack | Read it if you need to know about the backend stack | `harness/techguide/backend-stack.md`
 - Frontend guidelines | Read it **ALWAYS** that you are going to modify the frontend part | `harness/techguide/frontend-guidelines.md`s
